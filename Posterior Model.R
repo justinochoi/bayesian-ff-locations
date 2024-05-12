@@ -24,7 +24,7 @@ lefty_sample %>%
 
 # Verify normality 
 mvn(lefty_sample, mvnTest = 'mardia', multivariatePlot = 'qq') 
-mvn(righty_sample, mvnTest = 'mardia', multivariatePlot = 'qq') 
+mvn(righty_sample, mvnTest = 'mardia', multivariatePlot = 'qq')
 
 righty_ff %>% 
   summarize(xloc = mean(plate_x), yloc = mean(plate_z), 
@@ -68,12 +68,18 @@ ff_posterior <- function(player, league) {
 } 
 
 # Example players
-wheeler_loc <- righty_ff %>% 
-  filter(pitcher == 554430)
+wheeler_loc <- data_all %>% 
+  filter(pitch_type == 'FF' & p_throws == 'R') %>% 
+  filter(pitcher == 554430) %>% 
+  filter(!is.na(plate_x), !is.na(plate_z)) %>% 
+  dplyr::select(plate_x, plate_z) 
 wheeler_posterior <- as.data.frame(ff_posterior(wheeler_loc, righty_sample))
-kikuchi_loc <- lefty_ff %>% 
-  filter(pitcher == 579328)
-kikuchi_posterior <- as.data.frame(ff_posterior(kikuchi_loc, lefty_sample)) 
+kikuchi_loc <- data_all %>% 
+  filter(pitch_type == 'FF' & p_throws == 'L') %>%
+  filter(pitcher == 579328) %>% 
+  filter(!is.na(plate_x), !is.na(plate_z)) %>% 
+  dplyr::select(plate_x, plate_z) 
+kikuchi_posterior <- as.data.frame(ff_posterior(kikuchi_loc, lefty_sample))
 
 wheeler_posterior$source <- as.factor(c("posterior"))
 wheeler_loc$source <- as.factor(c("likelihood")) 
@@ -106,7 +112,7 @@ wheeler_plot <- ggplot(kZone, aes(x, y)) +
   theme(plot.title = element_text(face = 'bold')) + 
   labs(x = "Horizontal", y = "Vertical")
 
-wheeler_plot + facet_wrap(vars(source)) 
+wheeler_plot + facet_wrap(vars(source))
 # More variance in pitch locations 
 
 kikuchi_plot <- ggplot(kZone, aes(x, y)) + 
@@ -124,6 +130,7 @@ kikuchi_plot <- ggplot(kZone, aes(x, y)) +
 
 kikuchi_plot + facet_wrap(vars(source))
 # Less variance in pitch locations 
+
 
 
 
