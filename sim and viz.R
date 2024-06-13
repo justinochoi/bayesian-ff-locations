@@ -16,17 +16,17 @@ righty_ff_league <- data_all %>%
 set.seed(65) 
 
 # Take random samples for ease of computing
-lefty_sample <- lefty_ff[sample(nrow(lefty_ff), size=1000),]
-righty_sample <- righty_ff[sample(nrow(righty_ff), size=1000),]
+lefty_sample <- lefty_ff_league[sample(nrow(lefty_ff_league), size=1000),]
+righty_sample <- righty_ff_league[sample(nrow(righty_ff_league), size=1000),]
 
 # Verify normality 
 mvn(lefty_sample, mvnTest = 'mardia', multivariatePlot = 'qq') 
 mvn(righty_sample, mvnTest = 'mardia', multivariatePlot = 'qq')
 
-lefty_ff %>% 
+lefty_ff_league %>% 
   summarize(xloc = mean(plate_x), yloc = mean(plate_z), 
             cov = cov(plate_x, plate_z)) 
-righty_ff %>% 
+righty_ff_league %>% 
   summarize(xloc = mean(plate_x), yloc = mean(plate_z), 
             cov = cov(plate_x, plate_z)) 
 # Both lefty and righty four-seamers have nearly identical mean 
